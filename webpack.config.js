@@ -1,18 +1,14 @@
 const path = require('path');
+const glob = require('glob');
+const PurifyCssPlugin = require('purifycss-webpack');
 const uglify = require('uglifyjs-webpack-plugin');
 const htmlPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
-if(process.env.type== "build"){
-    var website={
-        publicPath:"http://127.0.0.1:1717/"
-    }
-}else{
-    var website={
-        publicPath:"http://www.sop1ay.com:7777/"
-    }
-}
-const glob = require('glob');
-const PurifyCSSPlugin = require("purifycss-webpack");
+const website ={
+    publicPath:"http://127.0.0.1:1717/"
+};
+// const glob = require('glob');
+// const PurifyCSSPlugin = require("purifycss-webpack");
 const webpack = require('webpack');
 const copyWebpackPlugin= require("copy-webpack-plugin");
 
@@ -101,9 +97,6 @@ module.exports = {
             template: './src/index.html'
         }),
         new extractTextPlugin('css/index.css'),
-        new PurifyCSSPlugin({
-            path: glob.sync(path.join(__dirname,'src/*.html'))
-        }),
         new webpack.ProvidePlugin({
             $: 'jquery'
         }),
@@ -115,7 +108,10 @@ module.exports = {
         new copyWebpackPlugin([{
             from:__dirname+'/src/public',
             to:'./public'
-        }])
+        }]),
+        new PurifyCssPlugin({
+            paths:glob.sync(path.join(__dirname,'src/*.html')),
+        })
     ],
 
     devServer:{
