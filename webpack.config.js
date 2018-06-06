@@ -4,9 +4,18 @@ const PurifyCssPlugin = require('purifycss-webpack');
 const uglify = require('uglifyjs-webpack-plugin');
 const htmlPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
-const website ={
-    publicPath:"http://127.0.0.1:1717/"
-};
+console.log( encodeURIComponent(process.env.type) );
+if(process.env.type === "build") {
+    var website = {
+        publicPath:"http://test.wp:8888/"
+    }
+    console.log(website)
+} else {
+    var website = {
+        publicPath:"http://127.0.0.1:1717/"
+    }
+    console.log(website)
+}
 // const glob = require('glob');
 // const PurifyCSSPlugin = require("purifycss-webpack");
 const webpack = require('webpack');
@@ -98,7 +107,8 @@ module.exports = {
         }),
         new extractTextPlugin('css/index.css'),
         new webpack.ProvidePlugin({
-            $: 'jquery'
+            $: 'jquery',
+            'Vue': 'vue'
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'jquery',
@@ -120,9 +130,16 @@ module.exports = {
         compress: true,
         port: 1717
     },
+
     watchOptions: {
         poll: 1000,
         aggregateTimeout : 500,
         ignored: /node_modules/,
+    },
+
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.common.js'
+        }
     }
 }
